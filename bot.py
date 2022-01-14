@@ -2,10 +2,10 @@
 import logging
 import os
 
-# noinspection PyPackageRequirements
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, Dispatcher, ChatMemberHandler
 
-from handlers.mute import mute_command, unmute_command
+from handlers.chat_join import channel_setup
+from handlers.mute import mute_command, unmute_command, mute_delay_command
 
 
 logging.basicConfig(
@@ -25,9 +25,17 @@ def main() -> None:
     updater = Updater(TOKEN)
     logger.info('Login success')
 
-    dispatcher = updater.dispatcher
+    dispatcher: Dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("mute", mute_command))
     dispatcher.add_handler(CommandHandler("unmute", unmute_command))
+    dispatcher.add_handler(CommandHandler('delayed', mute_delay_command))
+
+    dispatcher.add_handler(ChatMemberHandler(channel_setup))
+
+    # dispatcher.job_queue.run_repeating(
+    #     mute_job,
+    #     timedelta(seconds=20),
+    # )
 
     updater.start_polling()
     updater.idle()
