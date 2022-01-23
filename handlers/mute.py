@@ -24,7 +24,7 @@ def mute_command(update: 'Update', context: 'CallbackContext') -> None:
         update.message.reply_text('У вас недостаточно прав.')
         return
 
-    _set_permissions(context.bot, update.message.chat.id, permissions, 'Чат закрыт для новых сообщений')
+    set_permissions(context.bot, update.message.chat.id, permissions, 'Чат закрыт для новых сообщений')
 
 
 def unmute_command(update: 'Update', context: 'CallbackContext') -> None:
@@ -38,7 +38,7 @@ def unmute_command(update: 'Update', context: 'CallbackContext') -> None:
         update.message.reply_text('У вас недостаточно прав.')
         return
 
-    _set_permissions(context.bot, update.message.chat.id, permissions, 'Можете продолжить общение!')
+    set_permissions(context.bot, update.message.chat.id, permissions, 'Можете продолжить общение!')
 
 
 def mute_delay_command(update: 'Update', context: 'CallbackContext'):
@@ -47,7 +47,7 @@ def mute_delay_command(update: 'Update', context: 'CallbackContext'):
         can_change_info=False,
         can_pin_messages=False,
     )
-    context.job_queue.run_once(lambda _context: _set_permissions(
+    context.job_queue.run_once(lambda _context: set_permissions(
         _context.bot,
         update.message.chat.id,
         permissions,
@@ -97,7 +97,7 @@ def get_channels(context: 'CallbackContext'):
     return channels
 
 
-def _set_permissions(
+def set_permissions(
         bot: 'Bot',
         chat_id: int,
         permissions: ChatPermissions,
